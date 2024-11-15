@@ -1,1 +1,1 @@
-export const BACKEND_URL = "https://cars-app-api-premchand-ellendulas-projects.vercel.app/"
+export const BACKEND_URL = "https://cars-app-api-premchand-ellendulas-projects.vercel.app/api/v1"
