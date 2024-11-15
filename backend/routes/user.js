@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../db');
 const bcrypt = require('bcryptjs');
 const { JWT_SECRET } = require('../config');
+const { SignJWT } = require('jose');
 
 router.post('/signup', async (req, res) => {
     const existingUser = await User.findOne({
@@ -57,10 +58,12 @@ router.post("/signin", async (req, res) => {
                 message: "Incorrect password"
             })
         }
+        const secretKey = new TextEncoder().encode(JWT_SECRET);
 
-        const token = jwt.sign({
-            userId: user._id
-        }, JWT_SECRET)
+        const token = await new SignJWT({ userId: user._id })
+            .setProtectedHeader({ alg: 'HS256' })
+            .setExpirationTime('1h')
+            .sign(secretKey);
 
         res.json({
             token

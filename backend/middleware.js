@@ -1,7 +1,8 @@
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
+const { jwtVerify } = require('jose');
 const { JWT_SECRET } = require('./config');
 
-function authMiddleware(req, res, next){
+async function authMiddleware(req, res, next){
     const authHeader = req.headers.authorization;
 
     if(!authHeader || !authHeader.startsWith('Bearer ')){
@@ -11,12 +12,13 @@ function authMiddleware(req, res, next){
     }
 
     const token = authHeader.split(' ')[1];
+    const secretKey = new TextEncoder().encode(JWT_SECRET);
     
     try{
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const { payload } = await jwtVerify(token, secretKey);
 
-        if(decoded.userId){
-            req.userId = decoded.userId;
+        if(payload.userId){
+            req.userId = payload.userId;
             next();
         }else{
             return res.status(403).json({
