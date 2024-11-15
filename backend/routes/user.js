@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const { User } = require('../db');
 const bcrypt = require('bcryptjs');
-const { JWT_SECRET } = require('../config');
+require('dotenv').config();
 const { SignJWT } = require('jose');
 
 router.post('/signup', async (req, res) => {
@@ -58,7 +57,7 @@ router.post("/signin", async (req, res) => {
                 message: "Incorrect password"
             })
         }
-        const secretKey = new TextEncoder().encode(JWT_SECRET);
+        const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
 
         const token = await new SignJWT({ userId: user._id })
             .setProtectedHeader({ alg: 'HS256' })
