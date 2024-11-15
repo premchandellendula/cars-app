@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../db');
 const bcrypt = require('bcryptjs');
-require('dotenv').config();
 const { SignJWT } = require('jose');
 
 router.post('/signup', async (req, res) => {
